@@ -1,0 +1,185 @@
+***Variables de entorno creadas cuando Node se ejecuta:
+Objetos:
+	module
+	process: process.argv =>ubicacion de node
+				path del archivo ejecutado
+
+para el ejercicio de las tablas de multiplicar creamos un comando para crear 
+las tablas: node app --base=5
+
+Pero este comando es volátil, si ejecutamos
+	node app --hasta=20 --base=5
+me ejecuta una nueva tabla del 20 que no es lo que quiero.
+
+Podemos usar abreviaturas: 
+	node app -b=5
+me ejecuta la tabla del 5 por que agarramos el segundo parametro pero tendre
+problemas si no lo mandamos.
+
+Para crear este tipo de comando usamos paquetes para evitarnos dolores de cabeza
+
+
+Comando para obtener ayuda:
+	node --help
+Ese mismo tipo de doc se puede crear para nuestra app.
+
+***npm init package.json: para crear el package.json en nuestra app
+
+	1) npm init
+	2) seguir pasos
+	3) archivo para generar las dependencias y paquetes para que la app
+		sea ejecutada.
+
+Vamos a instalar yargs por npm:
+	1) npm i yargs --save
+			--save significa que es necesaria para que la app funcione
+
+A la vez se crea package-lock.json que es un registro de como se instalo el paquete
+
+También se crea node_modules: plugins necesarios para la app.No son enviados a producción
+
+
+Para nodemon tenemos:
+	npm install --save-dev nodemon
+
+--save-dev: nos indica que el paquete correra localmente en este proyecto,
+	    sería un paquete de desarrollo.
+
+**Para desinstalar un paquete:
+	npm uninstall nodemon
+
+
+**Creando aplicaciones de comando por consola con yargs:
+
+importamos el paquete:
+const argv = require("yargs").argv;
+
+clg(argv);
+clg(argv2);
+
+ejecutamos: node app listar --base= 5
+
+tenemos:
+{ _: [ 'listar' ], base: 5, '$0': 'app' }
+[
+  'C:\\Program Files\\nodejs\\node.exe',
+  'C:\\Users\\Usuario\\Desktop\\NodeHerrera\\03-bases-node\\miTabla\\app',
+  'listar',
+  '--base=5'
+]
+
+tenemos un arreglo con las clave valor de las flags usadas.
+
+usando comando modificamos el require:
+	const argv= require('yargs')
+			.command('listar','imprime en consola la tabla de multiplicar',{}
+				base:{
+				 	demand:true,
+					alias: 'b'
+				  }
+				})
+			.argv;
+
+
+para ver la base por console.log(argv.base);
+
+
+Por consola: node app listar
+
+me arroja ayuda.
+
+ahora tengo base y limite definidas sin importar el orden:
+	node app listar --limite=20 --base 50
+
+node app listar --help app listar
+
+clg(argv): { _: [ 'crear' ], base: 10, '$0': 'app' }
+
+los comandos sin pares de valores estan en el arreglo: _:
+
+console.log(argv);
+
+let comando = argv._[0];
+
+switch (comando) {
+  case "listar":
+    console.log("listar");
+    break;
+
+  case "crear":
+    console.log("crear");
+ crearArchivo(argv.base)
+      .then((archivo) => {
+        console.log(`Archivo creado: ${archivo}`);
+      })
+      .catch((e) => console.log(e));
+    break;
+
+  default:
+    console.log("comando no reconocido");
+    break;
+}
+
+node app crear--base 10
+node app crear --limite 5 -b 3	
+
+
+
+********************************************************************************
+************************************APP TODO ***********************************
+
+npm init
+npm install yargs colors
+
+Crearemos los comandos:
+	node app crear -d 'pasear al perro'
+	node app listar
+	node app actualizar -d comer -c true
+	node app actualizar -d "pasear al perro" -c true
+	node app actualizar -d comer -c true
+
+Tarea: crear comando para filtrar:
+	node app listar -c (tareas completadas)
+
+Configurando el primer release de la app:
+ git tag -a v1.0.0 -m "Primera versión"
+ git tag
+ git push --tags
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

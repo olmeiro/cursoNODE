@@ -1,0 +1,133 @@
+//**Introducción a los tokens:
+
+PUeden ser físicos o virtuales, se solicitan para generar autenticaciones.
+
+Nosotros vamos a usar un JSONToken,
+las app usan variables de sesión, para ello se tiene un servidor donde
+corre la app web, estas variables se crean cuando un usuario se autentica
+de forma correcta en el servidor.
+
+Si el servidor se desconecta o se reinicia, todos los usuarios se caen y
+deberán autenticarse de nuevo.
+
+Podemos tener x sesiones por usuarios, cómo administrar tantas sesiones?
+
+Aqui usamos los tokens, JWT : json web token
+
+tiene varias partes:
+
+	header: algoritmo de encryptacion con tipo de token.
+	payload:contiene información que queremos este en el token.
+	firma: permite a los verificadores si el JWT es válido. los falsos
+		no pasan.
+
+
+https://jwt.io/
+
+La encriptacion del jwt es de doble vía por lo que la información del 
+payload es fácilmente obtenible.
+
+Cómo el local storage es totalmente manipulable, con algo de Js
+alguién puede manipular el token, actualizar el local storage y enviar un
+token falso.El servidor debe verificar que el token no haya sido manipulado.
+
+Vamos a usar lo siguiente:
+
+parse-jwt.js
+
+function parseJwt(token){
+  var base64Url = token.split('.')[1];
+  var base64 = base64Url.replace('-', '+').replace('_', '/');
+  return JSON.parse(window.atob(base64));
+}
+
+let token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6Ik9sbWVpcm8gT3JvemNvIiwiaWF0IjoxNTE2MjM5MDIyfQ.2S2V5n0fZNFZx_PnJG8JxJuUGBxWrDRQoeosVf0VmiE';
+
+si aplicamos la funcion al token obtenemos la info del token.
+
+parseJwt(token);  //Devuelve info del token.
+
+En los tokens no debe guardarse info sensible como contraseñas.
+
+****///Corriendo app: levanto bd mongo y app localmente con
+	nodemon server/server
+
+En visual en folder routes creamos login.js
+Registramos la ruta en server.js: app.use(require('./routes/login'));
+
+En server registramos app.use(require("./routes/index"));
+y alli registramos todas nuestras rutas.
+
+//****Generar un jwt para la app:
+
+https://www.npmjs.com/package/jsonwebtoken
+
+npm install jsonwebtoken --save
+
+const jwt = require("jsonwebtoken");
+
+antes de enviar el json de res pongo el token:
+
+Puedo configurar las variables de entorno para la caducidad y el seed
+de autenticación para el token en el archivo config.js
+
+Voy a crear una variable en heroku para que sea el seed de la app
+
+en consola:
+ 	heroku config
+	heroku config:set SEED='este-es-el-seed-produccion'
+	heroku config
+
+//**Protegiendo rutas mediante el token: Middlewares:
+
+En los headers de la solicitud mandamos la palabra token o Authorization
+
+y ponemos el token que generamos en la solicitud post de postman.
+
+
+Vamos a crear los middlewares en usuarios.js como segundo argumento
+de los servicios rest con express.
+
+app.get('/usuario',xxx, (req, resp)=>{....
+
+al llamar al método get se dispara el token, se hace la verificación del 
+mismo y luego con next se sigue con la lógica en la petición.
+
+Los roles los leemos directamente del payload del Token, si queremos 
+cambiar de rol debemos generar un nuevo token por el login de postman.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,221 @@
+***************WebServer*****************************
+
+Levantamos un servidor con node para probar nuestras aplicaciones.
+
+Primero importamos http, creamos el servidor, mandamos lo que queremos y termina
+mos , para escuchar el servidor ejecutamos:
+	node app
+	http://localhost:8080/
+
+const http = require("http");
+
+//Creamos el servidor;
+
+http
+  .createServer((req, res) => {
+    res.writeHead(200, { "Content-Type": "application/json" });
+    let salida = {
+      nombre: "Olmeiro",
+      edad: 25,
+      url: req.url,
+    };
+    res.write(JSON.stringify(salida));
+    // res.write("Hola mundo");
+    res.end();
+  })
+  .listen(8080);
+
+console.log("Escuchando el puerto 8080");
+
+en consola. node app y abrimos http://localhost:8080/
+
+Para mejorar la sintaxis de nuestro código utilizaremos express:
+
+
+**************EXPRESS***********************************************************
+
+vamos a configurar el archivo server.js que será nuestra app:
+
+const express = require('express')
+const app = express()
+ 
+app.get('/', function (req, res) {
+  res.send('Hello World')
+})
+ 
+app.listen(3000)
+
+por consola: nodemon server.js
+
+a diferencia de http con express podemos trabajar con midleware (callback)
+que siempre se ejecuta sin importar que ruta se pida y así filtrar 
+las rutas deseadas.
+
+Por cada ruta creamos un servicio
+
+***Servir contenido estático:
+
+nuevo folder public
+	alli index.html y demás
+
+creamos el midleware en server.js
+
+ponemos_ app.use(express.static(__dirname + "/public"));
+
+por defecto se carga el index de public
+si queremos mas paginas las agregamos en public pero para la ruta debemos
+poner el nombre completo: ejemplo: home.html
+
+Todo lo que este en public será de dominio público
+
+///////////////////////Crear una pequeña pagina web///////////////////////
+
+Luego de tener configurada nuestra pequeña pagina queremos agregar mas templates
+como lo haciamos con laravel, en express vamos a usar para esto los 
+handlebars y asi no tener que copiar y pegar templates cada vez que lo requiero.
+
+https://handlebarsjs.com/guide/   Handlebars is a simple templating language.
+
+pero nosotros utilizaremos 
+	npm hbs
+
+instalamos npm install hbs --save
+
+
+para levantar el servidor : nodemon server.js
+
+///***Usando parciales con hbs handlebars:
+
+Los parciales son un bloque de código html que podemos utilizar.
+
+__dirname es una var global que concatena las rutas, para no preocuparse de en
+qué lugar se encuentran nuestros archivos.
+
+vamos a utilizar los navbar en parciales en home con:
+ {{> navbar }} en home.hbs.
+
+nodemon no detecta cambios en archivos hbs, por ello detengo el servidor y lo
+levanto de nuevo, para que detecte cambios ejecutamos e en consola para que 
+detecte cambios:
+
+	nodemon server -e js,hbs,html, css
+
+//**Usando helpers: son funciones que se disparan cuando un template lo requiere.
+Si no existen las variables mandadas a los helper en los render del server las
+busca en los helpers y las utiliza.
+
+movemos nuestros helpers a un folder y hacemos require('helpers') desde server.
+
+
+//***Subiendo app a Heroku:
+
+olme.orozco@
+Olmeiro-0
+
+en server.js configuro el puerto para Heroku:
+
+const port = process.env.PORT || 3000;  //si no existe PORT use el 3000.
+
+en node sabemos que montamos el servidor: con node server.js
+
+¿Cómo le decimos a Heroku que comandos tiene que ejecutar?
+
+En package.json: agregamos script:
+	"start": "node server.js",
+
+para comprobarlos ejecuto localmente: npm start y veo que se levante el server.
+
+si quiero levantar el nodemon pongo como script:
+	"nodemon": "nodemon server.js",
+
+y lo ejecuto como: npm run nodemon
+	
+Luego de configurado el puerto, Heroku trabaja en base a git:
+	Creamos el .gitignore
+	iniciamos    git init
+	agregamos    git add .
+	commit	     git commit -m "Base proyecto"
+
+Ahora subimos a Heroku: 
+acedemos a Heroku por consola: 
+	heroku login
+	heroku git:remote -a olme-webpage
+	 git push heroku master
+
+Luego del proceso copio la url para ver en el navegador o ejecuto
+	heroku open
+
+https://olme-webpage.herokuapp.com/
+
+
+//***Subir a github los cambios Webserver - Express - Heroku - HBS
+
+Al recargar Heroku puedo clonar el proyecto en caso de perder la app
+	heroku git:clone -a olme-webpage
+
+cualquier cambio que haga en el repositorio local lo puedo subir a Heroku 
+con: 
+	 git push heroku master
+
+
+//Para agregar nuevo tag en gitHub;
+
+git tag -a v1.0.0 -m "Primera versión del proyecto"
+git push --tags
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,81 @@
+***************Aplicación clima-mundo**************************
+
+npm init
+npm install --save yargs
+
+Comandos:
+	node app -d San Jose Costa Rica
+	node app -d Madrid España
+
+En la raiz del proyecto configuro el comando con options:
+
+const argv = require("yargs").options({
+  direccion: {
+    alias: "d",
+    desc: "Dirección de la ciudad para obtener el clima",
+    demand: true,
+  },
+});
+
+node app -d "Madrid España"
+
+
+
+***API: City Geo-Location Lookup
+	https://rapidapi.com/dev132/api/city-geo-location-lookup
+
+
+***API Weather by API-Ninjas
+https://rapidapi.com/apininjas/api/weather-by-api-ninjas/
+
+///Vamos a realizar la peticion con Axios a la API:
+
+Axios: trabaja en base a promesas.
+Request: trabaja en base a callbacks.
+
+npm instal axios
+
+hacemos la peticion en app y ejecutamos comando para ver que tal:
+	node app -d ottawa
+
+Cambie la api por que la original no funcionaba:
+https://rapidapi.com/weatherapi/api/weatherapi-com/
+
+al final ejecutar:
+	node app -d "New York"
+
+
+luego de subir a github
+
+git tag -a v1.0.0 -m "Primera versión"
+git tag
+git push --tags
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

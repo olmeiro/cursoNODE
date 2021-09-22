@@ -1,0 +1,137 @@
+//**Google SingIn:
+
+Vamos a conectar el google SingIn a nuestra a app, cuando una persona ingrese a nuestra
+pagina web, cuando haga click en el botón de google le pedirá al user que se autentique.
+esa info nos va a generar un token, ese token se enviará a nuestro backend server este lo
+procesará si es válido:	
+	si el usuario no existe: lo va a crear.
+	si existe nos genera un nuevo token que sea usado para validar nuestros servicios.
+
+Usaremos el google singIn solo para verificar que el usuario es válido.
+Pero seguiremos usando nuestro login personalizado.
+
+**Obtención del API Key y API Secret de Google:
+
+
+https://developers.google.com/identity/sign-in/web
+https://developers.google.com/identity/sign-in/web/sign-in
+
+Nombre app: MyAppSingIN:
+
+Clave API_key: 125224537688-f1bk59uplfib3rdqmnka365st92g8dll.apps.googleusercontent.com
+ID de cliente: 125224537688-u2175sitqu22llsp2lra66nf7erosrj4.apps.googleusercontent.com
+Secreto del cliente: t79BDK-yqfKIsGd4YyPfb0ya
+
+
+En la raiz del proyecto creamos un folder public con index.html
+Seguimos los pasos de google para la configuración y usamos el id del cliente.
+
+Como probamos? Habilitamos la carpeta public para que todos puedan verla.
+Levanto servidor: nodemon server/server
+
+Para habilitar public importamos path como require: es un paquete de node por defecto:
+
+const path = require("path");
+
+app.use(express.static(path.resolve(__dirname + "../public")));
+
+Con esto mandamos segmentos del path y el resolve los arma por nosotros.
+
+Ahora pruebo en navegador:
+	localhost:3000/index.html
+
+Al revisar en consola tenemos un error, se supone que configurando el la URI en la 
+consola de google funciona, ponemos para origenes cruzados de javascript:
+	http://localhost:3000
+
+
+
+//**Validar Token de Google - Backend:
+
+Ya obtuvimos la info del lado del frontend pero debemos mandar el token al backend:
+https://developers.google.com/identity/sign-in/web/backend-auth
+
+copiamos de la pagina: var id_token = googleUser.getAuthResponse().id_token;
+
+y la pegamos en la funcion del index.html onSignIn.
+
+Probamos ingresando a la app y ver el token una vez autenticados.Ese token lo mandamos
+al backend.
+
+empezamos a configurar el servicio en login.js
+
+app.post("/google", (req, res) => {
+  let token = req.body;
+
+  res.json({
+    body: req.body,
+  });
+});
+
+en index configuro: xhr.open("POST", "/google"); el servicio que acabo de configurar
+en login.js
+
+Con google outh library haremos la verificación del token:
+
+npm install google-auth-library --save
+
+
+Pasamos el token: const client = new OAuth2Client(process.env.CLIENT_ID);
+en login.js y configuramos los scripts cruzados en la app http://localhost:3000
+
+
+//**Crear un usuario personalizado en base a las credenciales de Google:
+
+En login en la función verify tenemos el payload y con la cual devolveremos un objeto de
+google.
+
+//**Probar Google SignIn desde Postman:
+
+recupero el id_token de google del index por consola y se lo paso a la peticion
+en {{url}}/google en postman:
+
+tendria que ver la infor del usuario con ese token.
+
+
+//**Generar la documentación automática de nuestros servicios con Postman:
+
+En el nombre de carpeta que contiene nuestros servicios click derecho y public docs.
+Seleccionamos el enviroment y luego publish.
+Nos genera un link que nos lleva a la documentación.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

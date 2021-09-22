@@ -1,0 +1,12 @@
+**CRUD y rutas de Categorías:
+
+Siguiendo los pasos para el usuario, la única novedad fue actualizar el token con el
+login normal en postman.
+
+**Cargar info de otras tablas:
+
+EL método populate() mira que id's hay en el documento y cargar información.
+por ejemplo:
+	populate('usuario') me carga el usuario que hizo el req.
+
+

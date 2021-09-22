@@ -1,0 +1,180 @@
+///Vamos a realizar un CRUD con mongodb y restserver
+
+/***Realizar conexion a mongoDB::
+
+buscamos npm mongoose
+vamos a: https://mongoosejs.com/
+
+instalamos mongoose:  
+	npm install mongoose --save
+
+
+Configuramos:
+	// Using Node.js `require()`
+const mongoose = require('mongoose');
+
+Luego establecer conexión a la base de datos:
+
+mongoose.connect(
+  "mongodb://localhost:27017/cafe",
+  {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    useFindAndModify: false,
+    useCreateIndex: true,
+  },
+
+  (err) => {
+    if (err) throw err;
+
+    console.log("Base datos online");
+  }
+);
+
+ejecuto en cosola: >nodemon server/server
+
+
+//Defino el esquema en models / usuario.js para usuarios.
+
+//POST creando un usuario en la colección:
+
+en usuarios routes importamos el modelo para que sea usado en BBDD:
+const Usuario = require('../models/usuario');
+
+
+Tengo problemas para conectar la BBDD asi que mirar este video:
+https://www.youtube.com/watch?v=fbYExfeFsI0
+
+
+Solucion: para registrar un schema en un modelo
+var Usuario = mongoose.model("Usuario", usuarioSchema);
+
+
+//**Validaciones personalizadas: email y rol:
+
+No vamos a permitir usuarios que tengan el mismo correo:
+
+agregamos en models usuarios.js a email: unique: true
+
+
+Vamos a personalizar los errores de inserción como valores repetidos con
+mongoose-unique-validator:
+
+npm install --save mongoose-unique-validator --save
+
+importo:
+	const uniqueValidator = require("mongoose-unique-validator");
+	declaro la variable unique
+inserto plugin:
+	usuarioSchema.plugin(uniqueValidator, { message: "{PATH} debe de ser único." });
+
+//***Encriptación de contraseña:: método hash de una sola vía. no será posible
+devolverla a su original.
+
+Paquete npm bcrypt:
+	en usuarios.js routes:
+	
+const bcrypt = require("bcrypt");
+password: bcrypt.hashSync(body.password, 10),
+
+pruebo nuevamente nodemon server/server
+y ejecuto con postman a ver que tal.
+
+en usuarios models quito el objeto password para no devolverlo:
+
+usuarioSchema.methods.toJSON = function () {
+  let user = this;
+  let userObject = user.toObject();
+  delete userObject.password;
+
+  return userObject;
+};
+
+**//PUT: actualización de registro:
+
+https://mongoosejs.com/docs/api.html#model_Model.findByIdAndUpdate
+
+utilizo la función findByIdAndUpdate() y paso argumentos, entre ellos
+{new: true} para que actualice los valores.
+
+//**Validaciones para PUT:
+
+si hacemos update sobre role este modifica el campo cosa que no debe,
+por ello, corremos las validaciones que tengamos con mongoose:
+
+agregamos en new: runValidators: true
+
+
+//**Tampoco deberíamos actualizar password por PUT:
+
+Vamos a utilizar underscore.js para filtrar estos campos:
+
+npm i underscore --save
+
+Buscamos en la documentación pick: 
+
+https://underscorejs.org/#pick
+
+//**GET Obtener todos los usuarios de forma paginada:
+
+**Filtrando los campos de los resultados de un get:
+
+//**mLab un Servicio de MongoDB en la nube::
+
+Hay un servicio gratuito hasta por  500mg, es bastante para un bd que alberga
+sólo texto.
+
+Atlas mongoDB
+user olme
+pw: dfZ5jnbCB6TCyKBD
+
+
+para actualizar todos los paquetes de node:
+	npm update
+
+
+
+//***Variables de entorno personalizadas Heroku:
+
+en consola:	heroku config -> name-project Config Vars
+
+Para crear nuevas variables de entorno en config:
+	heroku config:set nombre="olmeiro"
+
+Para obtener la variable de entorno por cli: heroku config:get nombre
+
+Para borrar la variable de entorno: heroku config:unset nombre
+
+Nos interesa proteger la url de la conexión remota a mongoDB que queda expuesta
+en nuestro repositorio github:
+
+
+heroku config:set MONGO_URI="mongodb+srv://olme:dfZ5jnbCB6TCyKBD@cluster0.lqg2v.mongodb.net/cafe"
+
+heroku config (para ver la variable de entorno)
+
+reemplazo en config.js por la variable de entorno:
+
+	urlDB = process.env.MONGO_URI;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

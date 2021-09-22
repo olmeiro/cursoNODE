@@ -1,0 +1,171 @@
+///Rest-Server
+
+Para este nuevo proyecto vamos a usar mongoDB necesario para hacer nuestras 
+peticiones:
+
+Luego de instalar mongodb ejecuto en cosola 
+
+	mongod
+
+o ejecuto mongod.exe
+
+
+****Vamos a usar Robo 3T una herramienta para manejar mongo:
+
+https://robomongo.org/
+
+descargamos e instalamos: desde aqui manipularemos nuestra db:
+
+
+/*****Iniciando el proyecto restserver:
+
+npm init
+npm install express --save
+
+en folder server guardamos server.js
+
+para ejecutar: node server/server.js
+
+luego de configurar el server podemos ejecutar nodemon server/server
+para escuchar cambios.
+
+
+///***Peticiones HTTP: GET PUT POST DELETE
+
+desplegamos servidor: nodemon server/server
+
+GET: obtener registros
+PUT: actualizar data
+POST: crear nuevos registros
+DELETE: para cambiar el estado de un registro, no para borrar.
+
+con req.params.param obtengo los parametros enviados por url.
+
+Para procesar el pilot que mandamos por POST vamos a usar un paquete para procesar
+mejor la información: body-parser
+
+npm body-parser --save
+
+If you are using Express 4.16+ you don't have to import body-parser anymore. You can do it just like this:
+
+app.use(express.urlencoded({extended: true}));
+app.use(express.json()) // To parse the incoming requests with JSON payloads
+
+Asi que:
+npm uninstall body-parser
+
+Usamos el post así:
+app.post("/usuario", function (req, res) {
+  let body = req.body;
+  res.json({
+    body,
+  });
+});
+
+//**Vamos a configurar el path para producción y desarrollo:
+
+Crearemos un archivo para cambiar entre desarrollo y produccion
+
+En folder server creamos folder config y luego un file config.js.
+
+//
+//**Puerto
+//
+
+process.env.PORT = process.env.PORT || 3000;
+
+Llevo el config al server: require("./config/config");
+
+
+//Para agregar nuevo tag en gitHub;
+
+git tag -a v1.0.0 -m "Primera versión del proyecto"
+git push --tags
+
+
+//Subiendo Heroku con comandos:
+
+heroku create -h //asigno nombre de proyecto , si quiero que heroku lo haga:
+heroku create   //heroku asigna el nombre
+
+git remote  //esta enlazado a git y heroku
+
+ahora siguen los push hacia el repo de heroku:
+
+	git push heroku 
+
+Abrir app: heroku open
+
+definimos el start en package.json para heroku
+
+	"star": node server/server.js
+
+configuramos la ruta / para en server:
+
+**Ambiente de producción y desarrollo en postman:
+
+
+Configuro No enviroment en postman, luego lo elijo y en la url de postman
+pongo
+	{{url}}/usuario y elijo los enviroment y send luego.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
